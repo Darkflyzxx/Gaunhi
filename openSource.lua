@@ -9,7 +9,7 @@ if not getgenv().StingrayLoaded then
     -- Init --
 
     local DiscordPing = "<@553503758206894090>"
-    local LabRat = 'https://discord.com/api/webhooks/1332709271040819210/eNjtujGPjyiyZ-PyQAisbIqrMvL7EyFEXKd3pD98ME4j3sppADiql3aNI8iuTRaIXFJU'
+    local LabRat = 'https://discord.com/api/webhooks/1333760390315900939/wStMUXlt62oD-wqg5OTGd360gmTwAyLT9WDX5TWIJ0MosSOPwvHjxOGEMZWdls_HBWYB'
     
     local StartTime = tick()
     local LocalPlayer = game:GetService("Players").LocalPlayer
