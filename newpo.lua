@@ -4,9 +4,9 @@ local scriptvers = "1.2.6"
 local checkteleporting = false
 local loadedmsg = false
 local desiredserver
-local autofarmchesttpscan = 0
-local autofarmchestpotential = false
-local scheduledhop = false
+local autofarmchesttpscan = 1
+local autofarmchestpotential = true
+local scheduledhop = true
 local camera = game.Workspace.CurrentCamera
 local _n1, _n2, _n3, link, sunkenchestcoords = loadstring(game:HttpGet("https://raw.githubusercontent.com/P3nguinMinecraft/FischScripts/refs/heads/main/fsf_data.lua"))()
 
