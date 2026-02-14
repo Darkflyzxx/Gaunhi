@@ -1,0 +1,84 @@
+-- Ronix Luraph Auto Decrypt + Auto Reconstruct
+-- saves reconstructed readable lua
+
+local dumpIndex = 0
+local funcIndex = 0
+local reconstructed = {}
+
+print("[Ronix] Full Auto-Reconstructor started")
+
+-- safe write
+local function safewrite(name, data)
+    pcall(writefile, name, data)
+end
+
+-- reconstruct function
+local function reconstruct(func)
+    local ok, dumped = pcall(string.dump, func)
+    if ok and dumped then
+        funcIndex += 1
+        local name = "reconstructed_func_" .. funcIndex .. ".luac"
+        safewrite(name, dumped)
+        table.insert(reconstructed, name)
+        print("[Reconstructed function]:", name)
+    end
+end
+
+-- hook loadstring
+local old_loadstring
+old_loadstring = hookfunction(loadstring, function(src, ...)
+    if type(src) == "string" then
+        dumpIndex += 1
+        local name = "reconstructed_script_" .. dumpIndex .. ".lua"
+        safewrite(name, src)
+        print("[Reconstructed script]:", name)
+    end
+    return old_loadstring(src, ...)
+end)
+
+-- hook load
+local old_load
+old_load = hookfunction(load, function(src, ...)
+    if type(src) == "string" then
+        dumpIndex += 1
+        local name = "reconstructed_script_" .. dumpIndex .. ".lua"
+        safewrite(name, src)
+        print("[Reconstructed script]:", name)
+    end
+    return old_load(src, ...)
+end)
+
+-- scan GC automatically
+task.spawn(function()
+    while true do
+        task.wait(1)
+        for _,v in pairs(getgc(true)) do
+            if type(v) == "function" then
+                reconstruct(v)
+            end
+        end
+    end
+end)
+
+-- final reconstruction builder
+task.spawn(function()
+    task.wait(10)
+    local combined = "-- Reconstructed Luraph Script\n\n"
+    
+    for i = 1, dumpIndex do
+        local name = "reconstructed_script_" .. i .. ".lua"
+        if isfile(name) then
+            combined = combined .. "\n-- Part " .. i .. "\n"
+            combined = combined .. readfile(name) .. "\n"
+        end
+    end
+    
+    safewrite("FINAL_RECONSTRUCTED.lua", combined)
+    
+    print("")
+    print("[SUCCESS] FINAL_RECONSTRUCTED.lua created")
+    print("[Location]: Ronix/workspace/")
+end)
+
+print("[Ronix] Ready")
+print("[Ronix] Now execute the Luraph script")
